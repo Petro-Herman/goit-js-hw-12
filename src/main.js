@@ -13,12 +13,13 @@ import {
 let query = '';
 let page = 1;
 let totalHits = 0;
+const per_page = 15;
 
 const form = document.querySelector('#search-form');
 const input = form.querySelector('input');
 const loadMoreButton = document.querySelector('#load-more');
 
-form.addEventListener('submit', async event => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   query = input.value.trim();
@@ -27,19 +28,19 @@ form.addEventListener('submit', async event => {
   }
 
   clearGallery();
-  hideLoadMoreButton(); // Приховуємо кнопку перед початком нового пошуку
+  hideLoadMoreButton(); 
   showLoadingIndicator();
   page = 1;
 
   try {
-    const data = await fetchImages(query, page);
+    const data = await fetchImages(query, page, per_page);
     totalHits = data.totalHits;
     if (data.hits.length === 0) {
       showNoResultsMessage();
     } else {
       renderImages(data.hits);
-      if (data.hits.length < totalHits) {
-        showLoadMoreButton(); // Відображаємо кнопку після успішного отримання результатів
+      if (page * per_page < totalHits) {
+        showLoadMoreButton(); 
       }
     }
   } catch (error) {
@@ -58,19 +59,21 @@ loadMoreButton.addEventListener('click', async () => {
   page += 1;
 
   try {
-    const data = await fetchImages(query, page);
-    if (data.hits.length === 0 || page * 15 >= totalHits) {
+    const data = await fetchImages(query, page, per_page);
+    if (data.hits.length === 0 || page * per_page >= totalHits) {
       showEndOfResultsMessage();
-      hideLoadMoreButton(); // Приховуємо кнопку, якщо більше немає результатів
+      hideLoadMoreButton(); 
     } else {
       renderImages(data.hits);
       window.scrollBy({
-        top:
-          document
-            .querySelector('.gallery')
-            .firstElementChild.getBoundingClientRect().height * 2,
+        top: document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height * 2,
         behavior: 'smooth',
       });
+
+      if (page * per_page >= totalHits) {
+        showEndOfResultsMessage();
+        hideLoadMoreButton();
+      }
     }
   } catch (error) {
     console.error('Error:', error);
