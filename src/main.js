@@ -19,7 +19,7 @@ const form = document.querySelector('#search-form');
 const input = form.querySelector('input');
 const loadMoreButton = document.querySelector('#load-more');
 
-form.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
 
   query = input.value.trim();
@@ -35,6 +35,7 @@ form.addEventListener('submit', async (event) => {
   try {
     const data = await fetchImages(query, page, per_page);
     totalHits = data.totalHits;
+    // console.log('Total hits:', totalHits); 
     if (data.hits.length === 0) {
       showNoResultsMessage();
     } else {
@@ -57,23 +58,23 @@ form.addEventListener('submit', async (event) => {
 loadMoreButton.addEventListener('click', async () => {
   showLoadingIndicator();
   page += 1;
+  // console.log('Current page:', page); 
 
   try {
     const data = await fetchImages(query, page, per_page);
-    if (data.hits.length === 0 || page * per_page >= totalHits) {
+    renderImages(data.hits);
+
+    if (page * per_page >= totalHits) {
       showEndOfResultsMessage();
-      hideLoadMoreButton(); 
+      hideLoadMoreButton();
     } else {
-      renderImages(data.hits);
       window.scrollBy({
-        top: document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height * 2,
+        top:
+          document
+            .querySelector('.gallery')
+            .firstElementChild.getBoundingClientRect().height * 2,
         behavior: 'smooth',
       });
-
-      if (page * per_page >= totalHits) {
-        showEndOfResultsMessage();
-        hideLoadMoreButton();
-      }
     }
   } catch (error) {
     console.error('Error:', error);

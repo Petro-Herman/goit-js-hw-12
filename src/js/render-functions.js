@@ -45,6 +45,7 @@ export function renderImages(images) {
   } else {
     lightbox.refresh();
   }
+  // console.log('Images rendered:', images); 
 }
 
 export function showNoResultsMessage() {
@@ -53,11 +54,13 @@ export function showNoResultsMessage() {
     message:
       'There are no images matching your search query. Please try again!',
   });
+  // console.log('No results message shown'); 
 }
 
 export function showLoadingIndicator() {
   const loader = document.querySelector('.loader');
   loader.classList.remove('hidden');
+  // console.log('Load More button shown'); 
 }
 
 export function hideLoadingIndicator() {
@@ -68,11 +71,13 @@ export function hideLoadingIndicator() {
 export function showLoadMoreButton() {
   const loadMoreButton = document.querySelector('#load-more');
   loadMoreButton.classList.remove('hidden');
+  // console.log('Load More button shown'); 
 }
 
 export function hideLoadMoreButton() {
   const loadMoreButton = document.querySelector('#load-more');
   loadMoreButton.classList.add('hidden');
+  // console.log('Load More button hidden'); 
 }
 
 export function showEndOfResultsMessage() {
